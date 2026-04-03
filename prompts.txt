@@ -1,0 +1,18 @@
+# Prompts for video generation with character and background consistency
+# Each line is a single prompt
+
+A professional woman in a white blouse and black blazer sits at a modern office desk, smiling confidently at the camera with consistent facial features and business setting background throughout the scene.
+
+The same young man wearing a red hoodie and jeans stands in a bright sunny park, looking directly at the camera with identical expressions, consistent clothing, and the same green trees and blue sky in the background.
+
+A middle-aged businessman in a dark suit and tie walks through a marble-floored corporate lobby, maintaining the same posture and appearance throughout, with consistent modern architecture and professional lighting.
+
+The same woman in casual summer clothing (white t-shirt, denim shorts) is sitting on a sandy beach, always showing the same relaxed expression, with consistent ocean waves and sunny weather in the background.
+
+A person wearing distinctive round glasses and a turtleneck sweater sits at a wooden desk in a cozy home library, maintaining consistent appearance and always surrounded by the same bookshelves and warm lighting.
+
+The same young girl in a school uniform stands in a bright classroom, keeping the same smile and posture throughout, with consistent desks, chalkboard, and classroom environment visible in the background.
+
+A man in traditional formal attire (elegant suit, tie) works at a sophisticated office space, always presenting the same professional demeanor and appearance, with consistent modern furniture and city skyline visible through windows.
+
+The same teenage student in casual sportswear sits on a college campus bench, maintaining consistent features and expression, always with the same academic environment, green campus grounds, and other students visible in the background.

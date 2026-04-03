@@ -15,7 +15,6 @@ cd "$REPO_ROOT" || exit 1
 
 PY_FILE=./generate.py
 
-
 function t2v_1_3B() {
     T2V_1_3B_CKPT_DIR="$MODEL_DIR/Wan2.1-T2V-1.3B"
 
