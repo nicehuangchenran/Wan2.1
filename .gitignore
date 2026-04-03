@@ -6,6 +6,8 @@
 *.gif
 *.bmp
 *.mp4
+!out_video/*.mp4
+!out_video/**/*.mp4
 *.mov
 *.mkv
 *.log
