@@ -1,0 +1,711 @@
+========================================================================================
+Wan2.1 1.3B Text-to-Video (T2V) — DiT 主干网络 (WanModel)
+========================================================================================
+超参数配置:
+    model_type      : t2v
+    patch_size      : (1, 2, 2)
+    text_len        : 512
+    in_dim          : 16
+    dim             : 1536
+    ffn_dim         : 8960
+    freq_dim        : 256
+    text_dim        : 4096
+    out_dim         : 16
+    num_heads       : 12
+    num_layers      : 30
+    window_size     : (-1, -1)
+    qk_norm         : True
+    cross_attn_norm : True
+    eps             : 1e-06
+----------------------------------------------------------------------------------------
+参数量统计:
+    总参数量    : 1,418,996,800 (1.4190 B / 1419.00 M)
+    可训练参数  : 1,418,996,800 (1419.00 M)
+----------------------------------------------------------------------------------------
+方式二: torchinfo.summary  —— 逐层参数表 (depth=6, 不执行前向)
+========================================================================================
+================================================================================================================================================================
+Layer (type (var_name):depth-idx)                            Param #                   Param %                   Kernel Shape              Trainable
+================================================================================================================================================================
+WanModel (WanModel)                                          --                             --                   --                        True
+├─Conv3d (patch_embedding): 1-1                              99,840                      0.01%                   [1, 2, 2]                 True
+├─Sequential (text_embedding): 1-2                           --                             --                   --                        True
+│    └─Linear (0): 2-1                                       6,292,992                   0.44%                   --                        True
+│    └─GELU (1): 2-2                                         --                             --                   --                        --
+│    └─Linear (2): 2-3                                       2,360,832                   0.17%                   --                        True
+├─Sequential (time_embedding): 1-3                           --                             --                   --                        True
+│    └─Linear (0): 2-4                                       394,752                     0.03%                   --                        True
+│    └─SiLU (1): 2-5                                         --                             --                   --                        --
+│    └─Linear (2): 2-6                                       2,360,832                   0.17%                   --                        True
+├─Sequential (time_projection): 1-4                          --                             --                   --                        True
+│    └─SiLU (0): 2-7                                         --                             --                   --                        --
+│    └─Linear (1): 2-8                                       14,164,992                  1.00%                   --                        True
+├─ModuleList (blocks): 1-5                                   --                             --                   --                        True
+│    └─WanAttentionBlock (0): 2-9                            9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-1                        --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-2                --                             --                   --                        True
+│    │    │    └─Linear (q): 4-1                             2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-2                             2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-3                             2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-4                             2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-5                    1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-6                    1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-3                        3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-4           --                             --                   --                        True
+│    │    │    └─Linear (q): 4-7                             2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-8                             2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-9                             2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-10                            2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-11                   1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-12                   1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-5                        --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-6                            --                             --                   --                        True
+│    │    │    └─Linear (0): 4-13                            13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-14                              --                             --                   --                        --
+│    │    │    └─Linear (2): 4-15                            13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (1): 2-10                           9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-7                        --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-8                --                             --                   --                        True
+│    │    │    └─Linear (q): 4-16                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-17                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-18                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-19                            2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-20                   1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-21                   1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-9                        3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-10          --                             --                   --                        True
+│    │    │    └─Linear (q): 4-22                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-23                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-24                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-25                            2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-26                   1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-27                   1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-11                       --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-12                           --                             --                   --                        True
+│    │    │    └─Linear (0): 4-28                            13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-29                              --                             --                   --                        --
+│    │    │    └─Linear (2): 4-30                            13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (2): 2-11                           9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-13                       --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-14               --                             --                   --                        True
+│    │    │    └─Linear (q): 4-31                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-32                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-33                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-34                            2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-35                   1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-36                   1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-15                       3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-16          --                             --                   --                        True
+│    │    │    └─Linear (q): 4-37                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-38                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-39                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-40                            2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-41                   1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-42                   1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-17                       --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-18                           --                             --                   --                        True
+│    │    │    └─Linear (0): 4-43                            13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-44                              --                             --                   --                        --
+│    │    │    └─Linear (2): 4-45                            13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (3): 2-12                           9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-19                       --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-20               --                             --                   --                        True
+│    │    │    └─Linear (q): 4-46                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-47                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-48                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-49                            2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-50                   1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-51                   1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-21                       3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-22          --                             --                   --                        True
+│    │    │    └─Linear (q): 4-52                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-53                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-54                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-55                            2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-56                   1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-57                   1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-23                       --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-24                           --                             --                   --                        True
+│    │    │    └─Linear (0): 4-58                            13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-59                              --                             --                   --                        --
+│    │    │    └─Linear (2): 4-60                            13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (4): 2-13                           9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-25                       --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-26               --                             --                   --                        True
+│    │    │    └─Linear (q): 4-61                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-62                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-63                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-64                            2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-65                   1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-66                   1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-27                       3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-28          --                             --                   --                        True
+│    │    │    └─Linear (q): 4-67                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-68                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-69                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-70                            2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-71                   1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-72                   1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-29                       --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-30                           --                             --                   --                        True
+│    │    │    └─Linear (0): 4-73                            13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-74                              --                             --                   --                        --
+│    │    │    └─Linear (2): 4-75                            13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (5): 2-14                           9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-31                       --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-32               --                             --                   --                        True
+│    │    │    └─Linear (q): 4-76                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-77                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-78                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-79                            2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-80                   1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-81                   1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-33                       3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-34          --                             --                   --                        True
+│    │    │    └─Linear (q): 4-82                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-83                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-84                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-85                            2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-86                   1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-87                   1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-35                       --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-36                           --                             --                   --                        True
+│    │    │    └─Linear (0): 4-88                            13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-89                              --                             --                   --                        --
+│    │    │    └─Linear (2): 4-90                            13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (6): 2-15                           9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-37                       --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-38               --                             --                   --                        True
+│    │    │    └─Linear (q): 4-91                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-92                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-93                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-94                            2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-95                   1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-96                   1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-39                       3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-40          --                             --                   --                        True
+│    │    │    └─Linear (q): 4-97                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-98                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-99                            2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-100                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-101                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-102                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-41                       --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-42                           --                             --                   --                        True
+│    │    │    └─Linear (0): 4-103                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-104                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-105                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (7): 2-16                           9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-43                       --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-44               --                             --                   --                        True
+│    │    │    └─Linear (q): 4-106                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-107                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-108                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-109                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-110                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-111                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-45                       3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-46          --                             --                   --                        True
+│    │    │    └─Linear (q): 4-112                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-113                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-114                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-115                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-116                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-117                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-47                       --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-48                           --                             --                   --                        True
+│    │    │    └─Linear (0): 4-118                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-119                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-120                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (8): 2-17                           9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-49                       --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-50               --                             --                   --                        True
+│    │    │    └─Linear (q): 4-121                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-122                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-123                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-124                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-125                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-126                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-51                       3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-52          --                             --                   --                        True
+│    │    │    └─Linear (q): 4-127                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-128                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-129                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-130                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-131                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-132                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-53                       --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-54                           --                             --                   --                        True
+│    │    │    └─Linear (0): 4-133                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-134                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-135                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (9): 2-18                           9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-55                       --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-56               --                             --                   --                        True
+│    │    │    └─Linear (q): 4-136                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-137                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-138                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-139                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-140                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-141                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-57                       3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-58          --                             --                   --                        True
+│    │    │    └─Linear (q): 4-142                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-143                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-144                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-145                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-146                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-147                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-59                       --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-60                           --                             --                   --                        True
+│    │    │    └─Linear (0): 4-148                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-149                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-150                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (10): 2-19                          9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-61                       --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-62               --                             --                   --                        True
+│    │    │    └─Linear (q): 4-151                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-152                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-153                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-154                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-155                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-156                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-63                       3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-64          --                             --                   --                        True
+│    │    │    └─Linear (q): 4-157                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-158                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-159                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-160                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-161                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-162                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-65                       --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-66                           --                             --                   --                        True
+│    │    │    └─Linear (0): 4-163                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-164                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-165                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (11): 2-20                          9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-67                       --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-68               --                             --                   --                        True
+│    │    │    └─Linear (q): 4-166                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-167                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-168                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-169                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-170                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-171                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-69                       3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-70          --                             --                   --                        True
+│    │    │    └─Linear (q): 4-172                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-173                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-174                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-175                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-176                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-177                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-71                       --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-72                           --                             --                   --                        True
+│    │    │    └─Linear (0): 4-178                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-179                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-180                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (12): 2-21                          9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-73                       --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-74               --                             --                   --                        True
+│    │    │    └─Linear (q): 4-181                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-182                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-183                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-184                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-185                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-186                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-75                       3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-76          --                             --                   --                        True
+│    │    │    └─Linear (q): 4-187                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-188                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-189                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-190                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-191                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-192                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-77                       --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-78                           --                             --                   --                        True
+│    │    │    └─Linear (0): 4-193                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-194                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-195                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (13): 2-22                          9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-79                       --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-80               --                             --                   --                        True
+│    │    │    └─Linear (q): 4-196                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-197                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-198                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-199                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-200                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-201                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-81                       3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-82          --                             --                   --                        True
+│    │    │    └─Linear (q): 4-202                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-203                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-204                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-205                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-206                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-207                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-83                       --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-84                           --                             --                   --                        True
+│    │    │    └─Linear (0): 4-208                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-209                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-210                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (14): 2-23                          9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-85                       --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-86               --                             --                   --                        True
+│    │    │    └─Linear (q): 4-211                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-212                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-213                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-214                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-215                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-216                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-87                       3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-88          --                             --                   --                        True
+│    │    │    └─Linear (q): 4-217                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-218                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-219                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-220                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-221                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-222                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-89                       --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-90                           --                             --                   --                        True
+│    │    │    └─Linear (0): 4-223                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-224                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-225                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (15): 2-24                          9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-91                       --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-92               --                             --                   --                        True
+│    │    │    └─Linear (q): 4-226                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-227                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-228                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-229                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-230                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-231                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-93                       3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-94          --                             --                   --                        True
+│    │    │    └─Linear (q): 4-232                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-233                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-234                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-235                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-236                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-237                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-95                       --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-96                           --                             --                   --                        True
+│    │    │    └─Linear (0): 4-238                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-239                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-240                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (16): 2-25                          9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-97                       --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-98               --                             --                   --                        True
+│    │    │    └─Linear (q): 4-241                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-242                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-243                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-244                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-245                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-246                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-99                       3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-100         --                             --                   --                        True
+│    │    │    └─Linear (q): 4-247                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-248                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-249                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-250                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-251                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-252                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-101                      --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-102                          --                             --                   --                        True
+│    │    │    └─Linear (0): 4-253                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-254                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-255                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (17): 2-26                          9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-103                      --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-104              --                             --                   --                        True
+│    │    │    └─Linear (q): 4-256                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-257                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-258                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-259                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-260                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-261                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-105                      3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-106         --                             --                   --                        True
+│    │    │    └─Linear (q): 4-262                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-263                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-264                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-265                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-266                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-267                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-107                      --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-108                          --                             --                   --                        True
+│    │    │    └─Linear (0): 4-268                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-269                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-270                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (18): 2-27                          9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-109                      --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-110              --                             --                   --                        True
+│    │    │    └─Linear (q): 4-271                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-272                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-273                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-274                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-275                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-276                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-111                      3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-112         --                             --                   --                        True
+│    │    │    └─Linear (q): 4-277                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-278                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-279                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-280                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-281                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-282                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-113                      --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-114                          --                             --                   --                        True
+│    │    │    └─Linear (0): 4-283                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-284                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-285                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (19): 2-28                          9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-115                      --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-116              --                             --                   --                        True
+│    │    │    └─Linear (q): 4-286                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-287                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-288                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-289                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-290                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-291                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-117                      3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-118         --                             --                   --                        True
+│    │    │    └─Linear (q): 4-292                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-293                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-294                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-295                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-296                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-297                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-119                      --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-120                          --                             --                   --                        True
+│    │    │    └─Linear (0): 4-298                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-299                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-300                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (20): 2-29                          9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-121                      --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-122              --                             --                   --                        True
+│    │    │    └─Linear (q): 4-301                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-302                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-303                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-304                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-305                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-306                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-123                      3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-124         --                             --                   --                        True
+│    │    │    └─Linear (q): 4-307                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-308                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-309                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-310                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-311                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-312                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-125                      --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-126                          --                             --                   --                        True
+│    │    │    └─Linear (0): 4-313                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-314                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-315                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (21): 2-30                          9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-127                      --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-128              --                             --                   --                        True
+│    │    │    └─Linear (q): 4-316                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-317                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-318                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-319                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-320                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-321                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-129                      3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-130         --                             --                   --                        True
+│    │    │    └─Linear (q): 4-322                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-323                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-324                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-325                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-326                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-327                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-131                      --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-132                          --                             --                   --                        True
+│    │    │    └─Linear (0): 4-328                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-329                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-330                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (22): 2-31                          9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-133                      --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-134              --                             --                   --                        True
+│    │    │    └─Linear (q): 4-331                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-332                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-333                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-334                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-335                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-336                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-135                      3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-136         --                             --                   --                        True
+│    │    │    └─Linear (q): 4-337                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-338                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-339                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-340                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-341                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-342                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-137                      --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-138                          --                             --                   --                        True
+│    │    │    └─Linear (0): 4-343                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-344                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-345                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (23): 2-32                          9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-139                      --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-140              --                             --                   --                        True
+│    │    │    └─Linear (q): 4-346                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-347                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-348                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-349                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-350                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-351                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-141                      3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-142         --                             --                   --                        True
+│    │    │    └─Linear (q): 4-352                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-353                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-354                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-355                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-356                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-357                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-143                      --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-144                          --                             --                   --                        True
+│    │    │    └─Linear (0): 4-358                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-359                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-360                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (24): 2-33                          9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-145                      --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-146              --                             --                   --                        True
+│    │    │    └─Linear (q): 4-361                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-362                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-363                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-364                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-365                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-366                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-147                      3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-148         --                             --                   --                        True
+│    │    │    └─Linear (q): 4-367                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-368                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-369                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-370                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-371                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-372                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-149                      --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-150                          --                             --                   --                        True
+│    │    │    └─Linear (0): 4-373                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-374                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-375                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (25): 2-34                          9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-151                      --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-152              --                             --                   --                        True
+│    │    │    └─Linear (q): 4-376                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-377                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-378                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-379                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-380                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-381                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-153                      3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-154         --                             --                   --                        True
+│    │    │    └─Linear (q): 4-382                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-383                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-384                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-385                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-386                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-387                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-155                      --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-156                          --                             --                   --                        True
+│    │    │    └─Linear (0): 4-388                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-389                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-390                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (26): 2-35                          9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-157                      --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-158              --                             --                   --                        True
+│    │    │    └─Linear (q): 4-391                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-392                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-393                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-394                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-395                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-396                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-159                      3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-160         --                             --                   --                        True
+│    │    │    └─Linear (q): 4-397                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-398                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-399                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-400                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-401                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-402                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-161                      --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-162                          --                             --                   --                        True
+│    │    │    └─Linear (0): 4-403                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-404                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-405                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (27): 2-36                          9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-163                      --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-164              --                             --                   --                        True
+│    │    │    └─Linear (q): 4-406                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-407                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-408                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-409                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-410                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-411                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-165                      3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-166         --                             --                   --                        True
+│    │    │    └─Linear (q): 4-412                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-413                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-414                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-415                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-416                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-417                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-167                      --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-168                          --                             --                   --                        True
+│    │    │    └─Linear (0): 4-418                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-419                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-420                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (28): 2-37                          9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-169                      --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-170              --                             --                   --                        True
+│    │    │    └─Linear (q): 4-421                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-422                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-423                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-424                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-425                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-426                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-171                      3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-172         --                             --                   --                        True
+│    │    │    └─Linear (q): 4-427                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-428                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-429                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-430                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-431                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-432                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-173                      --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-174                          --                             --                   --                        True
+│    │    │    └─Linear (0): 4-433                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-434                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-435                           13,764,096                  0.97%                   --                        True
+│    └─WanAttentionBlock (29): 2-38                          9,216                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm1): 3-175                      --                             --                   --                        --
+│    │    └─WanSelfAttention (self_attn): 3-176              --                             --                   --                        True
+│    │    │    └─Linear (q): 4-436                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-437                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-438                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-439                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-440                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-441                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm3): 3-177                      3,072                       0.00%                   --                        True
+│    │    └─WanT2VCrossAttention (cross_attn): 3-178         --                             --                   --                        True
+│    │    │    └─Linear (q): 4-442                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (k): 4-443                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (v): 4-444                           2,360,832                   0.17%                   --                        True
+│    │    │    └─Linear (o): 4-445                           2,360,832                   0.17%                   --                        True
+│    │    │    └─WanRMSNorm (norm_q): 4-446                  1,536                       0.00%                   --                        True
+│    │    │    └─WanRMSNorm (norm_k): 4-447                  1,536                       0.00%                   --                        True
+│    │    └─WanLayerNorm (norm2): 3-179                      --                             --                   --                        --
+│    │    └─Sequential (ffn): 3-180                          --                             --                   --                        True
+│    │    │    └─Linear (0): 4-448                           13,771,520                  0.97%                   --                        True
+│    │    │    └─GELU (1): 4-449                             --                             --                   --                        --
+│    │    │    └─Linear (2): 4-450                           13,764,096                  0.97%                   --                        True
+├─Head (head): 1-6                                           3,072                       0.00%                   --                        True
+│    └─WanLayerNorm (norm): 2-39                             --                             --                   --                        --
+│    └─Linear (head): 2-40                                   98,368                      0.01%                   --                        True
+================================================================================================================================================================
+Total params: 1,418,996,800
+Trainable params: 1,418,996,800
+Non-trainable params: 0
+================================================================================================================================================================

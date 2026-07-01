@@ -1,0 +1,75 @@
+========================================================================================
+Wan2.1 1.3B Text-to-Video (T2V) — DiT 主干网络 (WanModel)
+========================================================================================
+超参数配置:
+    model_type      : t2v
+    patch_size      : (1, 2, 2)
+    text_len        : 512
+    in_dim          : 16
+    dim             : 1536
+    ffn_dim         : 8960
+    freq_dim        : 256
+    text_dim        : 4096
+    out_dim         : 16
+    num_heads       : 12
+    num_layers      : 30
+    window_size     : (-1, -1)
+    qk_norm         : True
+    cross_attn_norm : True
+    eps             : 1e-06
+----------------------------------------------------------------------------------------
+参数量统计:
+    总参数量    : 1,418,996,800 (1.4190 B / 1419.00 M)
+    可训练参数  : 1,418,996,800 (1419.00 M)
+----------------------------------------------------------------------------------------
+方式一: print(model)  —— PyTorch 模块层级结构
+========================================================================================
+WanModel(
+  (patch_embedding): Conv3d(16, 1536, kernel_size=(1, 2, 2), stride=(1, 2, 2))
+  (text_embedding): Sequential(
+    (0): Linear(in_features=4096, out_features=1536, bias=True)
+    (1): GELU(approximate='tanh')
+    (2): Linear(in_features=1536, out_features=1536, bias=True)
+  )
+  (time_embedding): Sequential(
+    (0): Linear(in_features=256, out_features=1536, bias=True)
+    (1): SiLU()
+    (2): Linear(in_features=1536, out_features=1536, bias=True)
+  )
+  (time_projection): Sequential(
+    (0): SiLU()
+    (1): Linear(in_features=1536, out_features=9216, bias=True)
+  )
+  (blocks): ModuleList(
+    (0-29): 30 x WanAttentionBlock(
+      (norm1): WanLayerNorm((1536,), eps=1e-06, elementwise_affine=False)
+      (self_attn): WanSelfAttention(
+        (q): Linear(in_features=1536, out_features=1536, bias=True)
+        (k): Linear(in_features=1536, out_features=1536, bias=True)
+        (v): Linear(in_features=1536, out_features=1536, bias=True)
+        (o): Linear(in_features=1536, out_features=1536, bias=True)
+        (norm_q): WanRMSNorm()
+        (norm_k): WanRMSNorm()
+      )
+      (norm3): WanLayerNorm((1536,), eps=1e-06, elementwise_affine=True)
+      (cross_attn): WanT2VCrossAttention(
+        (q): Linear(in_features=1536, out_features=1536, bias=True)
+        (k): Linear(in_features=1536, out_features=1536, bias=True)
+        (v): Linear(in_features=1536, out_features=1536, bias=True)
+        (o): Linear(in_features=1536, out_features=1536, bias=True)
+        (norm_q): WanRMSNorm()
+        (norm_k): WanRMSNorm()
+      )
+      (norm2): WanLayerNorm((1536,), eps=1e-06, elementwise_affine=False)
+      (ffn): Sequential(
+        (0): Linear(in_features=1536, out_features=8960, bias=True)
+        (1): GELU(approximate='tanh')
+        (2): Linear(in_features=8960, out_features=1536, bias=True)
+      )
+    )
+  )
+  (head): Head(
+    (norm): WanLayerNorm((1536,), eps=1e-06, elementwise_affine=False)
+    (head): Linear(in_features=1536, out_features=64, bias=True)
+  )
+)
