@@ -50,6 +50,55 @@ from wan.modules.model import (  # noqa: E402
 
 _OUT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+
+# ============================================================================
+# 让 torchview 的图里, 每个 module 方框额外显示"该层的参数(权重)形状"。
+#
+# torchview 原生只在方框里画激活张量的 input/output shape, 不显示权重 shape。
+# 这里用 monkeypatch 猴补 ComputationGraph.get_node_label:
+#   - draw_graph 时 ModuleNode 只保存了模块的 id(compute_unit_id);
+#   - 我们提前用 model.named_modules() 建立 {id(module): "weight (...), bias (...)"}
+#     映射(只取该模块自身直接持有的参数, recurse=False, 避免把子模块参数重复计入);
+#   - 在原始 HTML 标签的表格末尾插入一行, 列出这些权重形状。
+# 属于改 torchview 内部行为, 若日后升级 torchview 导致标签结构变化需相应调整。
+# ============================================================================
+from torchview.computation_graph import ComputationGraph  # noqa: E402
+
+_ORIG_GET_NODE_LABEL = ComputationGraph.get_node_label
+_PARAM_INFO: dict = {}  # id(module) -> "weight (…), bias (…)"
+
+
+def _install_param_labels(model: torch.nn.Module) -> None:
+    """扫描 model 的所有子模块, 记录每个模块自身直接持有的参数形状。"""
+    _PARAM_INFO.clear()
+    for module in model.modules():
+        parts = [
+            f'{pname} {tuple(p.shape)}'
+            for pname, p in module.named_parameters(recurse=False)
+        ]
+        if parts:
+            _PARAM_INFO[id(module)] = ', '.join(parts)
+
+
+def _patched_get_node_label(self, node):
+    """在原标签基础上, 给带参数的 module 方框追加一行权重形状。"""
+    label = _ORIG_GET_NODE_LABEL(self, node)
+    info = _PARAM_INFO.get(getattr(node, 'compute_unit_id', None))
+    if info and '</TABLE>' in label:
+        # 表格是 5 列(name + input:2列 + shape:2列), 追加一整行跨满 5 列
+        extra_row = (
+            '<TR><TD COLSPAN="5" ALIGN="LEFT">'
+            f'<FONT COLOR="#7a3ea6" POINT-SIZE="10">params: {info}</FONT>'
+            '</TD></TR>'
+        )
+        idx = label.rfind('</TABLE>')
+        label = label[:idx] + extra_row + label[idx:]
+    return label
+
+
+ComputationGraph.get_node_label = _patched_get_node_label
+
+
 # ------------------------ Wan T2V 1.3B block 配置 ------------------------ #
 DIM = 1536          # transformer 隐藏维度
 FFN_DIM = 8960      # FFN 中间维度
@@ -207,6 +256,7 @@ def draw_single_block(draw_graph):
 
     print(f'正在用 torchview 追踪单个 WanAttentionBlock (dim={DIM}, '
           f'ffn_dim={FFN_DIM}, num_heads={NUM_HEADS}) ...')
+    _install_param_labels(model)   # 让每个 module 方框显示参数形状
     graph = draw_graph(
         model,
         input_data=(x, e, context),
@@ -238,6 +288,7 @@ def draw_full_model(draw_graph, num_layers=2):
 
     print(f'正在用 torchview 追踪完整 WanModel (t2v, dim={DIM}, '
           f'num_layers={num_layers}) ...')
+    _install_param_labels(model)   # 让每个 module 方框显示参数形状
     graph = draw_graph(
         model,
         input_data=(x, t, context),
